@@ -26,14 +26,14 @@
 
 
 # Check for Data File Archive
-fileName <- "NEI_data.zip"
+fileName <- "exdata-data-NEI_data.zip"
 if(! file.exists(fileName)) {
 	 message("Downloading the data set archive...")
 	 fileURL = "https://d396qusza40orc.cloudfront.net/exdata%2Fdata%2FNEI_data.zip"
 	 download.file(url=fileURL,destfile=fileName,method="curl")
 }
 # Extract Data File
-if!(file.exists("summarySCC_PM25.rds") && file.exists("Source_Classification_Code.rds"))) 
+if(!file.exists("summarySCC_PM25.rds") && !file.exists("Source_Classification_Code.rds")) {
 	 message("Extracting the data set files from the archive...")
 	 unzip(zipfile = fileName)
 }

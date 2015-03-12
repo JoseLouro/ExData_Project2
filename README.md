@@ -81,7 +81,7 @@ You must address the following questions and tasks in your exploratory analysis.
 First we'll aggregate the total PM2.5 emission from all sources for each of the years 1999, 2002, 2005, and 2008.
 
 <pre><code>
-aggTotalYear <- aggregate(Emissions ~ year,NEI, sum)
+aggTotalYear &lt;- aggregate(Emissions ~ year,NEI, sum)
 </code></pre>
 
 Using the base plotting system, now we plot the total PM2.5 Emission from all sources,
