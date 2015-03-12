@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Exploratory Data Analysis - Course Project 2
 
 ## Introduction
@@ -102,3 +103,4 @@ barplot(
 #### My Plot 1
 
 ![My plot1.png](plot1.png) 
+
