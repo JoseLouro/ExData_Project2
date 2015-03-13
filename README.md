@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Exploratory Data Analysis - Course Project 2
 
 ## Introduction
