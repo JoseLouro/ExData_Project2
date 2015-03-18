@@ -25,7 +25,7 @@
 ###
 ##########################################################################################################
 ### Set working directory to the location where the Electric power consumption Dataset was unzipped.
-# setwd("H:/My Documents/Personal Stuff/Career Docs/2. Data Science Specialization/4. Exploratory Data Analysis/3. Quizzes/ExData-Project2")
+# setwd("H:/My Documents/Personal Stuff/Career Docs/2. Data Science Specialization/4. Exploratory Data Analysis/3. Quizzes/ExData_Project2")
 
 
 # Check for Data File Archive
@@ -53,7 +53,7 @@ aggTotalYear <- aggregate(Emissions ~ year,NEI, sum)
 # Plot the Data!
 message("Plotting the data...")
 
-png("plot1.png",width=480,height=480,units="px",bg="transparent")
+png("plot1.png",width=640,height=640,units="px",bg="transparent")
 barplot(
   (aggTotalYear$Emissions)/10^6,
   names.arg=aggTotalYear$year,

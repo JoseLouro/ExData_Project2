@@ -3,7 +3,7 @@
 ## José Manuel Teles Louro da Silva 
 ## JoseLouro@gmail.com
 
-### plot2.R File Description:
+### plot3.R File Description:
 
 ### The overall goal of this assignment is to explore the National Emissions Inventory database and see what it say about fine particulate matter pollution in the United states over the 10-year period 1999–2008. You may use any R package you want to support your analysis.
 ### Dataset: Data for Peer Assessment [29Mb]
@@ -17,11 +17,15 @@
 ### 
 ### You must address the following questions and tasks in your exploratory analysis. For each question/task you will need to make a single plot. Unless specified, you can use any plotting system in R to make your plot.
 ### 
-### Question 2:
-### Have total emissions from PM2.5 decreased in the Baltimore City, Maryland (fips == "24510") from 1999 to 2008? 
+### Question 3:
+### Of the four types of sources indicated by the type (point, nonpoint, onroad, nonroad) variable, which of these four sources have seen decreases in emissions from 1999–2008 for Baltimore City? 
+### Which have seen increases in emissions from 1999–2008? Use the ggplot2 plotting system to make a plot answer this question.
 ### 
 ### Answer:
-### Overall total emissions from PM2.5 have decreased in Baltimore City, Maryland from 1999 to 2008.
+### The non-road, nonpoint, on-road source types have all seen decreased emissions overall from 1999-2008 in Baltimore City.
+###
+### The point source saw a slight increase overall from 1999-2008. Also note that the point source saw a significant increase until 2005 at which point it decreases again by 2008 to just above the starting values. 
+###
 ###
 ##########################################################################################################
 ### Set working directory to the location where the Electric power consumption Dataset was unzipped.
@@ -50,22 +54,21 @@ SCC <- readRDS("Source_Classification_Code.rds")
 message("Subset data by Baltimore's fip...")
 BaltimoreNEI <- NEI[NEI$fips=="24510",]
 
-
-# Aggregate using sum the Baltimore emissions data by year
-message("Aggregate the Baltimore emissions data by year...")
-aggTotalBaltimore <- aggregate(Emissions ~ year, BaltimoreNEI,sum)
-
 # Plot the Data!
 message("Plotting the data...")
+png("plot3.png",width=640,height=640,units="px",bg="transparent")
 
-png("plot2.png",width=640,height=640,units="px",bg="transparent")
-barplot(
-  aggTotalBaltimore$Emissions,
-  names.arg=aggTotalBaltimore$year,
-  xlab="Year",
-  ylab="PM2.5 Emissions (Tons)",
-  main="Total PM2.5 Emissions From all Baltimore City Sources"
-)
+library(ggplot2)
+
+ggp <- ggplot(BaltimoreNEI,aes(factor(year),Emissions,fill=type)) +
+  geom_bar(stat="identity") +
+  theme_bw() + guides(fill=FALSE)+
+  facet_grid(.~type,scales = "free",space="free") + 
+  labs(x="year", y=expression("Total PM"[2.5]*" Emission (Tons)")) + 
+  labs(title=expression("PM"[2.5]*" Emissions, Baltimore City 1999-2008 by Source Type"))
+
+print(ggp)
 
 message("Saving the plot...")
 dev.off() # Close the PNG device!
+

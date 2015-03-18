@@ -3,7 +3,7 @@
 ## José Manuel Teles Louro da Silva 
 ## JoseLouro@gmail.com
 
-### plot2.R File Description:
+### plot6.R File Description:
 
 ### The overall goal of this assignment is to explore the National Emissions Inventory database and see what it say about fine particulate matter pollution in the United states over the 10-year period 1999–2008. You may use any R package you want to support your analysis.
 ### Dataset: Data for Peer Assessment [29Mb]
@@ -17,11 +17,11 @@
 ### 
 ### You must address the following questions and tasks in your exploratory analysis. For each question/task you will need to make a single plot. Unless specified, you can use any plotting system in R to make your plot.
 ### 
-### Question 2:
-### Have total emissions from PM2.5 decreased in the Baltimore City, Maryland (fips == "24510") from 1999 to 2008? 
+### Question 6:
+### Which city has seen greater changes over time in motor vehicle emissions?
 ### 
 ### Answer:
-### Overall total emissions from PM2.5 have decreased in Baltimore City, Maryland from 1999 to 2008.
+### Los Angeles County has seen the greatest changes over time in motor vehicle emissions
 ###
 ##########################################################################################################
 ### Set working directory to the location where the Electric power consumption Dataset was unzipped.
@@ -46,26 +46,39 @@ message("Reading the data set files...")
 NEI <- readRDS("summarySCC_PM25.rds")
 SCC <- readRDS("Source_Classification_Code.rds")
 
-# Subset data by Baltimore's fip.
-message("Subset data by Baltimore's fip...")
-BaltimoreNEI <- NEI[NEI$fips=="24510",]
 
+# Gather the subset of the NEI data which corresponds to vehicles
+message("Subset data which corresponds to vehicles...")
+vehicles <- grepl("vehicle", SCC$SCC.Level.Two, ignore.case=TRUE)
+vehiclesSCC <- SCC[vehicles,]$SCC
+vehiclesNEI <- NEI[NEI$SCC %in% vehiclesSCC,]
 
-# Aggregate using sum the Baltimore emissions data by year
-message("Aggregate the Baltimore emissions data by year...")
-aggTotalBaltimore <- aggregate(Emissions ~ year, BaltimoreNEI,sum)
+# Subset the vehicles NEI data by each city's fip and add city name.
+message("Subset vehicles data by Baltimore's fip...")
+vehiclesBaltimoreNEI <- vehiclesNEI[vehiclesNEI$fips=="24510",]
+vehiclesBaltimoreNEI$city <- "Baltimore City"
 
-# Plot the Data!
-message("Plotting the data...")
+message("Subset vehicles data by LA's fip...")
+vehiclesLANEI <- vehiclesNEI[vehiclesNEI$fips=="06037",]
+vehiclesLANEI$city <- "Los Angeles County"
 
-png("plot2.png",width=640,height=640,units="px",bg="transparent")
-barplot(
-  aggTotalBaltimore$Emissions,
-  names.arg=aggTotalBaltimore$year,
-  xlab="Year",
-  ylab="PM2.5 Emissions (Tons)",
-  main="Total PM2.5 Emissions From all Baltimore City Sources"
-)
+# Combine the two subsets with city name into one data frame
+message("Combine the two subsets...")
+bothNEI <- rbind(vehiclesBaltimoreNEI,vehiclesLANEI)
+
+png("plot6.png",width=640,height=640,units="px",bg="transparent")
+
+library(ggplot2)
+ 
+ggp <- ggplot(bothNEI, aes(x=factor(year), y=Emissions, fill=city)) +
+ geom_bar(aes(fill=year),stat="identity") +
+ facet_grid(scales="free", space="free", .~city) +
+ guides(fill=FALSE) + theme_bw() +
+ labs(x="year", y=expression("Total PM"[2.5]*" Emission (Kilo-Tons)")) + 
+ labs(title=expression("PM"[2.5]*" Motor Vehicle Source Emissions in Baltimore & LA, 1999-2008"))
+ 
+print(ggp)
 
 message("Saving the plot...")
 dev.off() # Close the PNG device!
+

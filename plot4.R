@@ -3,7 +3,7 @@
 ## José Manuel Teles Louro da Silva 
 ## JoseLouro@gmail.com
 
-### plot2.R File Description:
+### plot4.R File Description:
 
 ### The overall goal of this assignment is to explore the National Emissions Inventory database and see what it say about fine particulate matter pollution in the United states over the 10-year period 1999–2008. You may use any R package you want to support your analysis.
 ### Dataset: Data for Peer Assessment [29Mb]
@@ -17,11 +17,11 @@
 ### 
 ### You must address the following questions and tasks in your exploratory analysis. For each question/task you will need to make a single plot. Unless specified, you can use any plotting system in R to make your plot.
 ### 
-### Question 2:
-### Have total emissions from PM2.5 decreased in the Baltimore City, Maryland (fips == "24510") from 1999 to 2008? 
+### Question 4:
+### Across the United States, how have emissions from coal combustion-related sources changed from 1999–2008 ?
 ### 
 ### Answer:
-### Overall total emissions from PM2.5 have decreased in Baltimore City, Maryland from 1999 to 2008.
+### Emissions from coal combustion related sources have decreased from 600,000 Tons to below 400,000 Tons from 1999-2008.
 ###
 ##########################################################################################################
 ### Set working directory to the location where the Electric power consumption Dataset was unzipped.
@@ -46,26 +46,29 @@ message("Reading the data set files...")
 NEI <- readRDS("summarySCC_PM25.rds")
 SCC <- readRDS("Source_Classification_Code.rds")
 
-# Subset data by Baltimore's fip.
-message("Subset data by Baltimore's fip...")
-BaltimoreNEI <- NEI[NEI$fips=="24510",]
 
-
-# Aggregate using sum the Baltimore emissions data by year
-message("Aggregate the Baltimore emissions data by year...")
-aggTotalBaltimore <- aggregate(Emissions ~ year, BaltimoreNEI,sum)
+# Subset coal combustion related NEI data
+message("Subset coal combustion related...")
+combustionRelated <- grepl("comb", SCC$SCC.Level.One, ignore.case=TRUE)
+coalRelated <- grepl("coal", SCC$SCC.Level.Four, ignore.case=TRUE) 
+coalCombustion <- (combustionRelated & coalRelated)
+combustionSCC <- SCC[coalCombustion,]$SCC
+combustionNEI <- NEI[NEI$SCC %in% combustionSCC,]
 
 # Plot the Data!
 message("Plotting the data...")
+png("plot4.png",width=640,height=640,units="px",bg="transparent")
 
-png("plot2.png",width=640,height=640,units="px",bg="transparent")
-barplot(
-  aggTotalBaltimore$Emissions,
-  names.arg=aggTotalBaltimore$year,
-  xlab="Year",
-  ylab="PM2.5 Emissions (Tons)",
-  main="Total PM2.5 Emissions From all Baltimore City Sources"
-)
+library(ggplot2)
+
+ggp <- ggplot(combustionNEI,aes(factor(year),Emissions/10^5)) +
+  geom_bar(stat="identity",fill="grey",width=0.75) +
+  theme_bw() +  guides(fill=FALSE) +
+  labs(x="year", y=expression("Total PM"[2.5]*" Emission (10^5 Tons)")) + 
+  labs(title=expression("PM"[2.5]*" Coal Combustion Source Emissions Across US from 1999-2008"))
+
+print(ggp)
 
 message("Saving the plot...")
 dev.off() # Close the PNG device!
+

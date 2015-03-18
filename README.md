@@ -76,8 +76,9 @@ SCC &lt;- readRDS("Source_Classification_Code.rds")
 You must address the following questions and tasks in your exploratory analysis. For each question/task you will need to make a single plot. Unless specified, you can use any plotting system in R to make your plot.
 
 ### Question 1
+## Have total emissions from PM2.5 decreased in the United States from 1999 to 2008? Using the base plotting system, make a plot showing the total PM2.5 emission from all sources for each of the years 1999, 2002, 2005, and 2008?
 
-First we'll aggregate the total PM2.5 emission from all sources for each of the years 1999, 2002, 2005, and 2008.
+First lets aggregate the total PM2.5 emission from all sources for each of the years 1999, 2002, 2005, and 2008.
 
 <pre><code>
 aggTotalYear &lt;- aggregate(Emissions ~ year,NEI, sum)
@@ -95,11 +96,38 @@ barplot(
 )
 </code></pre>
 
-### Plot 1
-
-![plot of chunk plot1](figure/plot1.png) 
-
 #### My Plot 1
 
 ![My plot1.png](plot1.png) 
+
+### Question 2
+## Have total emissions from PM2.5 decreased in the Baltimore City, Maryland (fips == "24510") from 1999 to 2008?
+
+First lets subset the data by Baltimore's fip
+<pre><code>
+BaltimoreNEI &lt;- NEI[NEI$fips=="24510",]
+</code></pre>
+
+Now, lets aggregate the Baltimore emissions data by year 1999, 2002, 2005, and 2008.
+
+<pre><code>
+aggTotalBaltimore &lt;- aggregate(Emissions ~ year,BaltimoreNEI, sum)
+</code></pre>
+
+Using the base plotting system, now we plot the total PM2.5 Emission from all sources,
+
+<pre><code>
+barplot(
+  aggTotalBaltimore$Emissions,
+  names.arg=aggTotalBaltimore$year,
+  xlab="Year",
+  ylab="PM2.5 Emissions (Tons)",
+  main="Total PM2.5 Emissions From all Baltimore City Sources"
+)
+</code></pre>
+
+#### My Plot 2
+
+![My plot2.png](plot2.png)
+
 
