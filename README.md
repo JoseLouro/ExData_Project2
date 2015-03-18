@@ -47,23 +47,17 @@ SCC &lt;- readRDS("Source_Classification_Code.rds")
 as long as each of those files is in your current working directory (check by calling <code>dir()</code> and see if those files are in the listing).
 
 ## Assignment
-
 The overall goal of this assignment is to explore the National Emissions Inventory database and see what it say about fine particulate matter pollution in the United states over the 10-year period 1999–2008. You may use any R package you want to support your analysis.
 
 ### Making and Submitting Plots
-
 For each plot you should
 
 * Construct the plot and save it to a PNG file.
-
 * Create a separate R code file (plot1.R, plot2.R, etc.) that constructs the corresponding plot, i.e. code in plot1.R constructs the plot1.png plot. Your code file should include code for reading the data so that the plot can be fully reproduced. You should also include the code that creates the PNG file. Only include the code for a single plot (i.e. plot1.R should only include code for producing plot1.png)
-
 * Upload the PNG file on the Assignment submission page
-
 * Copy and paste the R code from the corresponding R file into the text box at the appropriate point in the peer assessment.
 
 In preparation we first ensure the data sets archive is downloaded and extracted.
-
 We now load the NEI and SCC data frames from the .rds files.
 
 <pre><code>
@@ -72,20 +66,17 @@ SCC &lt;- readRDS("Source_Classification_Code.rds")
 </code></pre>
 
 ## Questions
-
 You must address the following questions and tasks in your exploratory analysis. For each question/task you will need to make a single plot. Unless specified, you can use any plotting system in R to make your plot.
 
 ### Question 1
-## Have total emissions from PM2.5 decreased in the United States from 1999 to 2008? Using the base plotting system, make a plot showing the total PM2.5 emission from all sources for each of the years 1999, 2002, 2005, and 2008?
+#### Have total emissions from PM2.5 decreased in the United States from 1999 to 2008? Using the base plotting system, make a plot showing the total PM2.5 emission from all sources for each of the years 1999, 2002, 2005, and 2008?
 
 First lets aggregate the total PM2.5 emission from all sources for each of the years 1999, 2002, 2005, and 2008.
-
 <pre><code>
 aggTotalYear &lt;- aggregate(Emissions ~ year,NEI, sum)
 </code></pre>
 
 Using the base plotting system, now we plot the total PM2.5 Emission from all sources,
-
 <pre><code>
 barplot(
   (aggTotalYear$Emissions)/10^6,
@@ -97,11 +88,14 @@ barplot(
 </code></pre>
 
 #### My Plot 1
-
 ![My plot1.png](plot1.png) 
 
+#### Answer
+As we can see from the plot, total emissions have decreased in the US from 1999 to 2008.
+
+
 ### Question 2
-## Have total emissions from PM2.5 decreased in the Baltimore City, Maryland (fips == "24510") from 1999 to 2008?
+#### Have total emissions from PM2.5 decreased in the Baltimore City, Maryland (fips == "24510") from 1999 to 2008?
 
 First lets subset the data by Baltimore's fip
 <pre><code>
@@ -109,13 +103,11 @@ BaltimoreNEI &lt;- NEI[NEI$fips=="24510",]
 </code></pre>
 
 Now, lets aggregate the Baltimore emissions data by year 1999, 2002, 2005, and 2008.
-
 <pre><code>
 aggTotalBaltimore &lt;- aggregate(Emissions ~ year,BaltimoreNEI, sum)
 </code></pre>
 
 Using the base plotting system, now we plot the total PM2.5 Emission from all sources,
-
 <pre><code>
 barplot(
   aggTotalBaltimore$Emissions,
@@ -127,7 +119,38 @@ barplot(
 </code></pre>
 
 #### My Plot 2
-
 ![My plot2.png](plot2.png)
+
+#### Answer
+Overall total emissions from PM2.5 have decreased in Baltimore City, Maryland from 1999 to 2008.
+
+### Question 3
+#### Of the four types of sources indicated by the type (point, nonpoint, onroad, nonroad) variable, which of these four sources have seen decreases in emissions from 1999–2008 for Baltimore City? 
+#### Which have seen increases in emissions from 1999–2008?
+
+First lets subset the data by Baltimore's fip
+<pre><code>
+BaltimoreNEI &lt;- NEI[NEI$fips=="24510",]
+</code></pre>
+
+Using the ggplot2 plotting system, 
+<pre><code>
+ggp <- ggplot(BaltimoreNEI,aes(factor(year),Emissions,fill=type)) +
+  geom_bar(stat="identity") +
+  theme_bw() + guides(fill=FALSE)+
+  facet_grid(.~type,scales = "free",space="free") + 
+  labs(x="year", y=expression("Total PM"[2.5]*" Emission (Tons)")) + 
+  labs(title=expression("PM"[2.5]*" Emissions, Baltimore City 1999-2008 by Source Type"))
+
+print(ggp)
+</code></pre>
+
+#### My Plot 3
+![My plot3.png](plot3.png)
+
+#### Answer
+The non-road, nonpoint, on-road source types have all seen decreased emissions overall from 1999-2008 in Baltimore City.
+The point source saw a slight increase overall from 1999-2008. 
+Also note that the point source saw a significant increase until 2005 at which point it decreases again by 2008 to just above the starting values. 
 
 
