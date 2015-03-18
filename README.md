@@ -15,7 +15,8 @@
 </ul>
 
 ####The zip file contains two files:
-#####PM2.5 Emissions Data (summarySCC_PM25.rds): This file contains a data frame with all of the PM2.5 emissions data for 1999, 2002, 2005, and 2008. For each year, the table contains number of tons of PM2.5 emitted from a specific type of source for the entire year. Here are the first few rows.
+#####PM2.5 Emissions Data (<code>summarySCC_PM25.rds</code>): 
+###### This file contains a data frame with all of the PM2.5 emissions data for 1999, 2002, 2005, and 2008. For each year, the table contains number of tons of PM2.5 emitted from a specific type of source for the entire year. Here are the first few rows.
 
 <pre><code>
 ##     fips      SCC Pollutant Emissions  type year
@@ -36,16 +37,15 @@
 <li><code>year</code>: The year of emissions recorded</li>
 </ul>
 
-##### Source Classification Code Table (<code>Source_Classification_Code.rds</code>): This table provides a mapping from the SCC digit strings int he Emissions table to the actual name of the PM2.5 source. The sources are categorized in a few different ways from more general to more specific and you may choose to explore whatever categories you think are most useful. For example, source “10100101” is known as “Ext Comb /Electric Gen /Anthracite Coal /Pulverized Coal”.
+##### Source Classification Code Table (<code>Source_Classification_Code.rds</code>): 
+###### This table provides a mapping from the SCC digit strings int he Emissions table to the actual name of the PM2.5 source. The sources are categorized in a few different ways from more general to more specific and you may choose to explore whatever categories you think are most useful. For example, source “10100101” is known as “Ext Comb /Electric Gen /Anthracite Coal /Pulverized Coal”.
 
 ##### You can read each of the two files using the <code>readRDS()</code> function in R. For example, reading in each file can be done with the following code:
-
 <pre><code>
 ## This first line will likely take a few seconds. Be patient!
 NEI &lt;- readRDS("summarySCC_PM25.rds")
 SCC &lt;- readRDS("Source_Classification_Code.rds")
 </code></pre>
-
 ##### as long as each of those files is in your current working directory (check by calling <code>dir()</code> and see if those files are in the listing).
 
 ## Assignment
@@ -102,17 +102,17 @@ barplot(
 ### Question 2
 ##### Have total emissions from PM2.5 decreased in the Baltimore City, Maryland <code>(fips == "24510")</code> from 1999 to 2008?
 
-First lets subset the data by Baltimore's fip
+##### First lets subset the data by Baltimore's fip
 <pre><code>
 BaltimoreNEI &lt;- NEI[NEI$fips=="24510",]
 </code></pre>
 
-Now, lets aggregate the Baltimore emissions data by year 1999, 2002, 2005, and 2008.
+##### Now, lets aggregate the Baltimore emissions data by year 1999, 2002, 2005, and 2008.
 <pre><code>
 aggTotalBaltimore &lt;- aggregate(Emissions ~ year,BaltimoreNEI, sum)
 </code></pre>
 
-Using the base plotting system, now we plot the total PM2.5 Emission from all sources,
+##### Using the base plotting system, now we plot the total PM2.5 Emission from all sources,
 <pre><code>
 barplot(
   aggTotalBaltimore$Emissions,
@@ -127,7 +127,7 @@ barplot(
 ![My plot2.png](plot2.png)
 
 #### Answer
-Overall total emissions from PM2.5 have decreased in Baltimore City, Maryland from 1999 to 2008.
+##### Overall total emissions from PM2.5 have decreased in Baltimore City, Maryland from 1999 to 2008.
 
 
 
@@ -137,12 +137,12 @@ Overall total emissions from PM2.5 have decreased in Baltimore City, Maryland fr
 ##### Of the four types of sources indicated by the type (point, nonpoint, onroad, nonroad) variable, which of these four sources have seen decreases in emissions from 1999–2008 for Baltimore City? 
 ##### Which have seen increases in emissions from 1999–2008?
 
-First lets subset the data by Baltimore's fip
+##### First lets subset the data by Baltimore's fip
 <pre><code>
 BaltimoreNEI &lt;- NEI[NEI$fips=="24510",]
 </code></pre>
 
-Using the ggplot2 plotting system, 
+##### Using the ggplot2 plotting system, 
 <pre><code>
 ggp &lt;- ggplot(BaltimoreNEI,aes(factor(year),Emissions,fill=type)) +
   geom_bar(stat="identity") +
@@ -158,9 +158,9 @@ print(ggp)
 ![My plot3.png](plot3.png)
 
 #### Answer
-The non-road, nonpoint, on-road source types have all seen decreased emissions overall from 1999-2008 in Baltimore City.
-The point source saw a slight increase overall from 1999-2008. 
-Also note that the point source saw a significant increase until 2005 at which point it decreases again by 2008 to just above the starting values. 
+##### The non-road, nonpoint, on-road source types have all seen decreased emissions overall from 1999-2008 in Baltimore City.
+##### The point source saw a slight increase overall from 1999-2008. 
+##### Also note that the point source saw a significant increase until 2005 at which point it decreases again by 2008 to just above the starting values. 
 
 
 
@@ -169,7 +169,7 @@ Also note that the point source saw a significant increase until 2005 at which p
 ## Question 4
 ##### Across the United States, how have emissions from coal combustion-related sources changed from 1999–2008 ?
 
-First lets subset the coal combustion related NEI data
+##### First lets subset the coal combustion related NEI data
 <pre><code>
 combustionRelated 	&lt;- grepl("comb", SCC$SCC.Level.One, ignore.case=TRUE)
 coalRelated 		&lt;- grepl("coal", SCC$SCC.Level.Four, ignore.case=TRUE) 
@@ -178,7 +178,7 @@ combustionSCC 		&lt;- SCC[coalCombustion,]$SCC
 combustionNEI 		&lt;- NEI[NEI$SCC %in% combustionSCC,]
 </code></pre>
 
-Using the ggplot2 plotting system, 
+##### Using the ggplot2 plotting system, 
 <pre><code>
 ggp &lt;- ggplot(combustionNEI,aes(factor(year),Emissions/10^5)) +
   geom_bar(stat="identity",fill="grey",width=0.75) +
@@ -193,7 +193,7 @@ print(ggp)
 ![My plot4.png](plot4.png)
 
 #### Answer
-Emissions from coal combustion related sources have decreased from 600,000 Tons to below 400,000 Tons from 1999-2008.
+##### Emissions from coal combustion related sources have decreased from 600,000 Tons to below 400,000 Tons from 1999-2008.
 
 
 
@@ -202,19 +202,19 @@ Emissions from coal combustion related sources have decreased from 600,000 Tons 
 ## Question 5
 ##### How have emissions from motor vehicle sources changed from 1999–2008 in Baltimore City?
 
-First lets subset data which corresponds to vehicles
+##### First lets subset data which corresponds to vehicles
 <pre><code>
 vehicles 	&lt;- grepl("vehicle", SCC$SCC.Level.Two, ignore.case=TRUE)
 vehiclesSCC &lt;- SCC[vehicles,]$SCC
 vehiclesNEI &lt;- NEI[NEI$SCC %in% vehiclesSCC,]
 </code></pre>
 
-Then we have to subset the data by Baltimore's fip
+##### Then we have to subset the data by Baltimore's fip
 <pre><code>
 baltimoreVehiclesNEI &lt;- vehiclesNEI[vehiclesNEI$fips=="24510",]
 </code></pre>
 
-Using the ggplot2 plotting system, 
+##### Using the ggplot2 plotting system, 
 <pre><code>
 ggp &lt;- ggplot(baltimoreVehiclesNEI,aes(factor(year),Emissions)) +
   geom_bar(stat="identity",fill="grey",width=0.75) +
@@ -229,7 +229,7 @@ print(ggp)
 ![My plot5.png](plot5.png)
 
 #### Answer
-Emissions from motor vehicle sources have dropped from 1999-2008 in Baltimore City!
+##### Emissions from motor vehicle sources have dropped from 1999-2008 in Baltimore City!
 
 
 
@@ -238,31 +238,31 @@ Emissions from motor vehicle sources have dropped from 1999-2008 in Baltimore Ci
 ## Question 6
 ##### Comparing emissions from motor vehicle sources in Baltimore City <code>(fips == "24510")</code> with emissions from motor vehicle sources in Los Angeles County, California <code>(fips == "06037")</code>, which city has seen greater changes over time in motor vehicle emissions?
 
-First lets subset data which corresponds to vehicles
+##### First lets subset data which corresponds to vehicles
 <pre><code>
 vehicles 	&lt;- grepl("vehicle", SCC$SCC.Level.Two, ignore.case=TRUE)
 vehiclesSCC &lt;- SCC[vehicles,]$SCC
 vehiclesNEI &lt;- NEI[NEI$SCC %in% vehiclesSCC,]
 </code></pre>
 
-Then we have to subset the data by Baltimore's fip
+##### Then we have to subset the data by Baltimore's fip
 <pre><code>
 vehiclesBaltimoreNEI 		&lt;- vehiclesNEI[vehiclesNEI$fips=="24510",]
 vehiclesBaltimoreNEI$city 	&lt;- "Baltimore City"
 </code></pre>
 
-Then we have to subset the data by by LA's County fip
+##### Then we have to subset the data by by LA's County fip
 <pre><code>
 vehiclesLANEI 		&lt;- vehiclesNEI[vehiclesNEI$fips=="06037",]
 vehiclesLANEI$city 	&lt;- "Los Angeles County"
 </code></pre>
 
-Now, lets combine the two subsets
+##### Now, lets combine the two subsets
 <pre><code>
 bothNEI &lt;- rbind(vehiclesBaltimoreNEI,vehiclesLANEI)
 </code></pre>
 
-Using the ggplot2 plotting system, 
+##### Using the ggplot2 plotting system, 
 <pre><code>
 ggp &lt;- ggplot(bothNEI, aes(x=factor(year), y=Emissions, fill=city)) +
  geom_bar(aes(fill=year),stat="identity") +
@@ -278,4 +278,4 @@ print(ggp)
 ![My plot6.png](plot6.png)
 
 #### Answer
-Los Angeles County has seen the greatest changes over time in motor vehicle emissions
+##### Los Angeles County has seen the greatest changes over time in motor vehicle emissions
