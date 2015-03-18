@@ -69,7 +69,7 @@ SCC &lt;- readRDS("Source_Classification_Code.rds")
 You must address the following questions and tasks in your exploratory analysis. For each question/task you will need to make a single plot. Unless specified, you can use any plotting system in R to make your plot.
 
 ### Question 1
-#### Have total emissions from PM2.5 decreased in the United States from 1999 to 2008? Using the base plotting system, make a plot showing the total PM2.5 emission from all sources for each of the years 1999, 2002, 2005, and 2008?
+#### Have total emissions from PM2.5 decreased in the United States from 1999 to 2008? 
 
 First lets aggregate the total PM2.5 emission from all sources for each of the years 1999, 2002, 2005, and 2008.
 <pre><code>
@@ -95,7 +95,7 @@ As we can see from the plot, total emissions have decreased in the US from 1999 
 
 
 ### Question 2
-#### Have total emissions from PM2.5 decreased in the Baltimore City, Maryland (fips == "24510") from 1999 to 2008?
+#### Have total emissions from PM2.5 decreased in the Baltimore City, Maryland <code>(fips == "24510")</code> from 1999 to 2008?
 
 First lets subset the data by Baltimore's fip
 <pre><code>
@@ -141,8 +141,6 @@ ggp <- ggplot(BaltimoreNEI,aes(factor(year),Emissions,fill=type)) +
   facet_grid(.~type,scales = "free",space="free") + 
   labs(x="year", y=expression("Total PM"[2.5]*" Emission (Tons)")) + 
   labs(title=expression("PM"[2.5]*" Emissions, Baltimore City 1999-2008 by Source Type"))
-
-print(ggp)
 </code></pre>
 
 #### My Plot 3
