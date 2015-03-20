@@ -1,7 +1,6 @@
 ##########################################################################################################
 ## Coursera Course Project 2 for Exploratory Data Analysis
 ## José Manuel Teles Louro da Silva 
-## JoseLouro@gmail.com
 
 ### plot5.R File Description:
 
